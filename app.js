@@ -7,6 +7,7 @@ var logger = require('morgan');
 const PORT =5000
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const category = require('./routes/category.route')
 require("dotenv").config();
 var app = express();
 
@@ -61,5 +62,6 @@ app.use(function(err, req, res, next) {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
 })
+
 
 module.exports = app;

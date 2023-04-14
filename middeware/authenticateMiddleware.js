@@ -34,10 +34,10 @@ const authenticateToken = (req, res, next) => {
 const isAdmin = async (req, res, next) => {
   try {
     // Get the user object from the request
-    const { userId } = req.user;
+    // const { userId } = req.user;
 
     // Fetch the user from the database
-    const user = await User.findById(userId);
+    const user = await User.findById(req.userId);
 
     // Check if user has admin role
     if (!user || user.role !== 'admin') {

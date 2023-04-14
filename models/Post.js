@@ -1,5 +1,9 @@
 const mongoose = require('mongoose')
-
+const Schema = mongoose.Schema; 
+// const Category = require('./Category')
+if (mongoose.models['Post']) {
+  delete mongoose.models['Post'];
+}
 const postSchema = new Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
@@ -10,7 +14,8 @@ const postSchema = new Schema({
   // Add other post-specific fields as needed
 });
 
-  
-  const Post = mongoose.model('Post', postSchema);
+mongoose.model('Post', postSchema);
+module.exports = mongoose.model('Post');
+  // const Post = mongoose.model('Post', postSchema);
 
-module.exports = Post;
+// module.exports = mongoose.model('Post', postSchema);;

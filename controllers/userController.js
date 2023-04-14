@@ -3,7 +3,7 @@ const User = require('../models/user');
 const { secretKey } = require('../config'); // Import your secret key from config
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs'); 
-
+const Post = require('../models/Post')
 
 // Controller function to handle user registration
 const registerUser = async (req, res) => {
@@ -62,7 +62,7 @@ const loginUser = async (req, res) => {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ id: user._id }, secretKey, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user._id }, secretKey, { expiresIn: '5h' });
 
     // Send token in response
     res.json({ token });
@@ -71,56 +71,60 @@ const loginUser = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
-// const authenticateUser = (req, res, next) => {
-//   // Get the token from the request headers, query parameters, or cookies
-//   const token = req.headers.authorization || req.query.token || req.cookies.token;
 
-//   // Check if token is present
-//   if (!token) {
-//     return res.status(401).json({ error: 'Unauthorized' });
-//   }
-
-//   try {
-//     // Verify the token
-//     const decoded = jwt.verify(token, secretKey);
-
-//     // Attach the user ID to the request object for further use
-//     req.userId = decoded.id;
-
-//     // Call the next middleware or route handler
-//     next();
-//   } catch (err) {
-//     return res.status(401).json({ error: 'Unauthorized' });
-//   }
-// };
 const profile = async (req, res) => {
+
+  res.send(req.userId)
+
+ 
+
+
   
+};
+const getUserById = async (req, res) => {
+  const userId = req.params.userId; // Get user ID from URL parameter
+
   try {
-    // Get the authenticated user's ID from the request object
-    const userId = req.userId;
-
-    // Fetch the user profile data from the database using the user ID
+    // Find user by ID
     const user = await User.findById(userId);
-
-    // Check if user exists
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ error: 'User not found' });
     }
 
-    // Send the user profile data as a response
-    res.status(200).json( {user} );
+    // Count user's posts
+    const postCount = await Post.countDocuments({ author: userId });
+
+    // Return user object with post count
+    return res.json({ user, postCount });
   } catch (err) {
-    // Handle error if any
-    console.error(err);
-    res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ error: err.message });
   }
 };
+const showAllPostsByUserId = async (req, res) => {
+  try {
+    const userId = req.params.userId; // Lấy userId từ request parameters
 
+    // Tìm kiếm các bài viết của người dùng dựa trên userId
+    const posts = await Post.find({ author: userId });
+
+    // Xử lý kết quả trả về (danh sách các bài viết)
+    console.log('Các bài viết của người dùng với userId: ' + userId);
+    console.log(posts);
+
+    // Trả về kết quả dưới dạng JSON
+    res.json(posts);
+  } catch (error) {
+    // Xử lý lỗi
+    console.error('Lỗi khi tìm kiếm bài viết: ' + error.message);
+    // Trả về thông báo lỗi cho client
+    res.status(500).json({ error: error.message });
+  }
+};
 // Export the controller functions
 module.exports = {
   registerUser,
   loginUser,
-  // authenticateUser,
+  showAllPostsByUserId,
   profile,
-  
+  getUserById,
 };

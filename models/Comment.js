@@ -1,13 +1,15 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-const commentSchema = new Schema({
+// Định nghĩa schema cho comments
+const commentSchema = new mongoose.Schema({
   content: { type: String, required: true },
-  post: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
-  author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  createdDate: { type: Date, default: Date.now },
-  // Add other comment-specific fields as needed
-});
-  
-  const Comment = mongoose.model('Comment', commentSchema);
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Reference to User model for user who posted the comment
+  post: { type: mongoose.Schema.Types.ObjectId, ref: 'Post', required: true }, // Reference to Post model for the post that the comment belongs to
+  replies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }] // Array of Comment references for storing reply commentsường dẫn ảnh (không bắt buộc)
+}, { timestamps: true }); // Thêm timestamps cho created_at và updated_at
 
+// Tạo model Comment từ schema đã định nghĩa
+const Comment = mongoose.model('Comment', commentSchema);
+
+// Export model Comment để sử dụng ở những nơi khác trong ứng dụng
 module.exports = Comment;
