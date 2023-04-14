@@ -34,7 +34,7 @@ const commentController = {
 
     // Lấy thông tin từ request body
     const { content, post } = req.body;
-
+    
     // Kiểm tra nội dung comment
     if (!content || content.trim() === '') {
       return res.status(400).json({ message: 'Nội dung comment không được bỏ trống' });
