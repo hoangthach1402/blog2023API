@@ -4,7 +4,7 @@ const { secretKey } = require('../config'); // Import your secret key from confi
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs'); 
 const Post = require('../models/Post')
-
+const Comment = require('../models/Comment')
 // Controller function to handle user registration
 const registerUser = async (req, res) => {
   try {
@@ -72,14 +72,34 @@ const loginUser = async (req, res) => {
   }
 };
 
-const profile = async (req, res) => {
+const getUserPostComment = async (req, res) => {
+  try {
+    const userId = req.userId;
 
-  res.send(req.userId)
+    // Lấy thông tin người dùng
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'Không tìm thấy người dùng' });
+    }
 
- 
+    // Lấy bài đăng của người dùng, giới hạn là 10 và sắp xếp theo thứ tự mới nhất
+    const posts = await Post.find({ author: userId }).limit(10).sort({ createdAt: -1 });
 
+    // Lấy bình luận của người dùng, giới hạn là 10 và sắp xếp theo thứ tự mới nhất
+    const comments = await Comment.find({ user: userId }).limit(10).sort({ createdAt: -1 });
 
-  
+    // Lấy phản hồi của người dùng, giới hạn là 5 và sắp xếp theo thứ tự mới nhất
+    const replies = await Comment.find({ 'replies.user': userId }).limit(5).sort({ createdAt: -1 });
+
+    return res.json({
+      user: user,
+      posts: posts,
+      comments: comments,
+      replies: replies
+    });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 };
 const getUserById = async (req, res) => {
   const userId = req.params.userId; // Get user ID from URL parameter
@@ -125,6 +145,6 @@ module.exports = {
   registerUser,
   loginUser,
   showAllPostsByUserId,
-  profile,
+  getUserPostComment,
   getUserById,
 };
