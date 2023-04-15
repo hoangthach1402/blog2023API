@@ -1,5 +1,5 @@
 const Category = require('../models/category');
-const Post = require('../models/post');
+const Post = require('../models/Post');
 
 const categoryController = {
   // Lấy danh sách các Category

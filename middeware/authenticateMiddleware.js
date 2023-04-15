@@ -6,6 +6,7 @@ const User = require('../models/user');
 
 // Middleware function to verify JWT token
 const authenticateToken = (req, res, next) => {
+  console.log(0)
   // Get the token from request headers
     // Get the token from the request headers, query parameters, or cookies
   const token = req.headers.authorization || req.query.token || req.cookies.token;
@@ -14,11 +15,12 @@ const authenticateToken = (req, res, next) => {
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
-
+  console.log(1) 
   try {
     console.log(secretKey)
     // Verify the token
     const decoded = jwt.verify(token, secretKey);
+  console.log(2) 
 
     // Attach the user ID to the request object for further use
     req.userId = decoded.id;
@@ -26,6 +28,8 @@ const authenticateToken = (req, res, next) => {
     // Call the next middleware or route handler
     next();
   } catch (err) {
+  console.log(3) 
+
     return res.status(401).json({ error: 'Unauthorized' });
   }
 };

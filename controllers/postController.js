@@ -33,11 +33,15 @@ const getAllPosts = async (req, res) => {
 // GET: Get a specific post by ID
 const getPostById = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findById(postId).populate({
+      path: 'comments',
+      populate: { path: 'replies' }
+    });
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
     }
-    res.json({ post });
+    // res.status(200).json({ comments: post.comments });
+    res.json({ post },{ comments: post.comments });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
@@ -57,7 +61,7 @@ const updatePost = async (req, res) => {
       return res.status(404).json({ message: 'Post not found' });
     }
     res.json({ post: updatedPost });
-  } catch (err) {
+  } catch (err) {z
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
   }

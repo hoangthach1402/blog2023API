@@ -14,12 +14,10 @@ router.get('/', function(req, res, next) {
 router.get('/:userId',userController.getUserById)
 router.get('/:userId/posts',userController.showAllPostsByUserId)
 // Route for user registration
-router.post('/register', userController.registerUser);
-router.get('/test',authenticateToken,isAdmin, (req,res)=>{
+router.get('/test', function(req,res){
   res.send('test admin')
 });
 // Route for user login
-router.post('/login', userController.loginUser);
-router.get('/profile',authenticateToken,userController.profile); 
+router.get('/profile',userController.profile); 
 
 module.exports = router;
