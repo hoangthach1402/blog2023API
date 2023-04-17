@@ -10,7 +10,7 @@ router.post('/', authenticateToken, postController.createPost);
 router.get('/', postController.getAllPosts);
 
 // Route for getting a specific post by ID
-router.get('/:id', postController.getPostById);
+router.get('/:postId', postController.getPostById);
 
 
 // Route for updating a post by ID

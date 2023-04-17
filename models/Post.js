@@ -10,6 +10,7 @@ const postSchema = new Schema({
   category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
   tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }], 
   createdDate: { type: Date, default: Date.now },
   // Add other post-specific fields as needed
 });

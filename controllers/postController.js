@@ -1,4 +1,5 @@
 const Post = require('../models/Post');
+const Comment = require('../models/Comment')
 // const User = require('../models/user');
 // POST: Create a new post
 const createPost = async (req, res) => {
@@ -33,15 +34,20 @@ const getAllPosts = async (req, res) => {
 // GET: Get a specific post by ID
 const getPostById = async (req, res) => {
   try {
+    const postId = req.params.postId;
     const post = await Post.findById(postId).populate({
       path: 'comments',
-      populate: { path: 'replies' }
+      populate: {
+        path: 'replies',
+        model: 'Comment'
+      }
     });
+    
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
     }
-    // res.status(200).json({ comments: post.comments });
-    res.json({ post },{ comments: post.comments });
+    
+    res.json({ post });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
@@ -90,5 +96,4 @@ module.exports = {
   updatePost,
   deletePost,
   
-  
-};
+  };

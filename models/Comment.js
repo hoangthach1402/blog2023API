@@ -6,7 +6,7 @@ const commentSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Reference to User model for user who posted the comment
   post: { type: mongoose.Schema.Types.ObjectId, ref: 'Post', required: true }, // Reference to Post model for the post that the comment belongs to
   replies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }] // Array of Comment references for storing reply commentsường dẫn ảnh (không bắt buộc)
-}, { timestamps: true }); // Thêm timestamps cho created_at và updated_at
+}, { timestamps: true , strictPopulate: false }); // Thêm timestamps cho created_at và updated_at
 
 // Tạo model Comment từ schema đã định nghĩa
 const Comment = mongoose.model('Comment', commentSchema);

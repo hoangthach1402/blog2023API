@@ -3,6 +3,7 @@ const router = express.Router();
 const commentController = require('../controllers/comment.controller');
 const {  authenticateToken,isAdmin} = require('../middeware/authenticateMiddleware');
 
+router.get('/', commentController.getAllComments);
 // Create a new comment
 router.post('/', authenticateToken,commentController.createComment);
 
